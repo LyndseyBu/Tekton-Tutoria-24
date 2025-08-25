@@ -1,0 +1,16 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: nodejs-pipeline-run-1
+spec:
+  pipelineRef:
+    name: nodejs-ci-pipeline
+  params:
+    - name: repo-url
+      value: https://github.com/IBM/node-hello-world
+    - name: revision
+      value: main
+  workspaces:
+    - name: shared-workspace
+      persistentVolumeClaim:
+        claimName: pipeline-workspace-pvc
