@@ -1,0 +1,29 @@
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerTemplate
+metadata:
+  name: nodejs-pipeline-template
+spec:
+  params:
+    - name: git-repo-url
+      description: The git repository URL to clone from
+    - name: git-revision
+      description: The git revision to build
+    - name: git-repo-name
+      description: The repository name
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+        generateName: nodejs-pipeline-run-
+      spec:
+        pipelineRef:
+          name: nodejs-ci-pipeline
+        params:
+          - name: repo-url
+            value: $(tt.params.git-repo-url)
+          - name: revision
+            value: $(tt.params.git-revision)
+        workspaces:
+          - name: shared-workspace
+            persistentVolumeClaim:
+              claimName: pipeline-workspace-pvc
