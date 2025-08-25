@@ -7,7 +7,7 @@ spec:
     name: nodejs-ci-pipeline
   params:
     - name: repo-url
-      value: https://github.com/IBM/node-hello-world
+      value: https://github.com/nodejs/examples
     - name: revision
       value: main
   workspaces:
