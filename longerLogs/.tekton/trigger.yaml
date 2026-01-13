@@ -1,0 +1,41 @@
+apiVersion: triggers.tekton.dev/v1beta1
+kind: EventListener
+metadata:
+  name: log-generator-listener
+spec:
+  serviceAccountName: tekton-triggers-sa
+  triggers:
+    - name: log-generator-trigger
+      bindings:
+        - ref: log-generator-triggerbinding
+      template:
+        ref: log-generator-triggertemplate
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerBinding
+metadata:
+  name: log-generator-triggerbinding
+spec:
+  params:
+    - name: run-name
+      value: $(body.run-name)
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerTemplate
+metadata:
+  name: log-generator-triggertemplate
+spec:
+  params:
+    - name: run-name
+      description: The name for the pipeline run
+      default: log-generator-run-$(uid)
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+        generateName: log-generator-run-
+        name: $(tt.params.run-name)
+      spec:
+        pipelineRef:
+          name: log-generator-pipeline
+        serviceAccountName: default
