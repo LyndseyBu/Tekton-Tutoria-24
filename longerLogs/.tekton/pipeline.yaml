@@ -20,16 +20,18 @@ spec:
         #!/bin/bash
         set -e
         
-        echo "Starting log generation..."
+        echo "[INFO] Starting log generation..."
         echo ""
         
         # Generate 100 lines of logs with different levels
         for i in {1..100}; do
           # Determine log level based on line number
           if [ $i -eq 15 ]; then
+            # DEBUG to stdout with special prefix
             echo "[DEBUG] Line $i: Debug information - checking variable states and execution flow"
           elif [ $i -eq 25 ] || [ $i -eq 50 ] || [ $i -eq 75 ] || [ $i -eq 90 ]; then
-            echo "[WARNING] Line $i: Warning - potential issue detected, please review configuration"
+            # WARNING to stderr
+            echo "[WARNING] Line $i: Warning - potential issue detected, please review configuration" >&2
           elif [ $((i % 10)) -eq 0 ]; then
             echo "[INFO] Line $i: Checkpoint reached - processing milestone $((i/10)) of 10"
           else
