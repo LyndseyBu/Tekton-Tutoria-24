@@ -3,7 +3,7 @@ kind: EventListener
 metadata:
   name: log-generator-listener
 spec:
-  serviceAccountName: tekton-triggers-sa
+  serviceAccountName: default
   triggers:
     - name: log-generator-trigger
       bindings:
