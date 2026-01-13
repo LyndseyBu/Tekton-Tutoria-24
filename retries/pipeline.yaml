@@ -1,0 +1,15 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: retry-example-pipeline
+spec:
+  tasks:
+    - name: failing-task
+      retries: 3
+      taskSpec:
+        steps:
+          - name: fail-step
+            image: alpine
+            script: |
+              echo "Attempt will fail to demonstrate retries"
+              exit 1
