@@ -1,0 +1,12 @@
+apiVersion: triggers.tekton.dev/v1beta1
+kind: EventListener
+metadata:
+  name: retry-example-listener
+spec:
+  serviceAccountName: tekton-triggers-sa
+  triggers:
+    - name: retry-trigger
+      bindings:
+        - ref: retry-example-binding
+      template:
+        ref: retry-example-template
