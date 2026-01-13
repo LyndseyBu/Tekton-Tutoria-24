@@ -1,0 +1,45 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: log-generator-pipeline
+spec:
+  tasks:
+    - name: generate-logs
+      taskRef:
+        name: log-generator-task
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: log-generator-task
+spec:
+  steps:
+    - name: generate-logs
+      image: icr.io/continuous-delivery/pipeline/pipeline-base-ubi:3.46
+      script: |
+        #!/bin/bash
+        set -e
+        
+        echo "Starting log generation..."
+        echo ""
+        
+        # Generate 100 lines of logs with different levels
+        for i in {1..100}; do
+          # Determine log level based on line number
+          if [ $i -eq 15 ]; then
+            echo "[DEBUG] Line $i: Debug information - checking variable states and execution flow"
+          elif [ $i -eq 25 ] || [ $i -eq 50 ] || [ $i -eq 75 ] || [ $i -eq 90 ]; then
+            echo "[WARNING] Line $i: Warning - potential issue detected, please review configuration"
+          elif [ $((i % 10)) -eq 0 ]; then
+            echo "[INFO] Line $i: Checkpoint reached - processing milestone $((i/10)) of 10"
+          else
+            echo "[INFO] Line $i: Processing task step $i - operation in progress"
+          fi
+          
+          # Add slight delay for readability (optional, can be removed for faster execution)
+          sleep 0.05
+        done
+        
+        echo ""
+        echo "[INFO] Log generation completed successfully - 100 lines generated"
+        echo "[INFO] Summary: 1 DEBUG, 4 WARNING, 95 INFO messages"
