@@ -20,22 +20,33 @@ spec:
         #!/bin/bash
         set -e
         
-        echo "[INFO] Starting log generation..."
+        # Function to log with proper formatting
+        log_info() {
+          echo "$(date -u +"%Y-%m-%dT%H:%M:%S.%3NZ") [INFO] $1"
+        }
+        
+        log_warning() {
+          echo "$(date -u +"%Y-%m-%dT%H:%M:%S.%3NZ") [WARNING] $1" >&2
+        }
+        
+        log_debug() {
+          echo "$(date -u +"%Y-%m-%dT%H:%M:%S.%3NZ") [DEBUG] $1"
+        }
+        
+        log_info "Starting log generation..."
         echo ""
         
         # Generate 100 lines of logs with different levels
         for i in {1..100}; do
           # Determine log level based on line number
           if [ $i -eq 15 ]; then
-            # DEBUG to stdout with special prefix
-            echo "[DEBUG] Line $i: Debug information - checking variable states and execution flow"
+            log_debug "Line $i: Debug information - checking variable states and execution flow"
           elif [ $i -eq 25 ] || [ $i -eq 50 ] || [ $i -eq 75 ] || [ $i -eq 90 ]; then
-            # WARNING to stderr
-            echo "[WARNING] Line $i: Warning - potential issue detected, please review configuration" >&2
+            log_warning "Line $i: Warning - potential issue detected, please review configuration"
           elif [ $((i % 10)) -eq 0 ]; then
-            echo "[INFO] Line $i: Checkpoint reached - processing milestone $((i/10)) of 10"
+            log_info "Line $i: Checkpoint reached - processing milestone $((i/10)) of 10"
           else
-            echo "[INFO] Line $i: Processing task step $i - operation in progress"
+            log_info "Line $i: Processing task step $i - operation in progress"
           fi
           
           # Add slight delay for readability (optional, can be removed for faster execution)
@@ -43,5 +54,5 @@ spec:
         done
         
         echo ""
-        echo "[INFO] Log generation completed successfully - 100 lines generated"
-        echo "[INFO] Summary: 1 DEBUG, 4 WARNING, 95 INFO messages"
+        log_info "Log generation completed successfully - 100 lines generated"
+        log_info "Summary: 1 DEBUG, 4 WARNING, 95 INFO messages"
