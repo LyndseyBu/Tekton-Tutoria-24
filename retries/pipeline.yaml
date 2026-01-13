@@ -12,4 +12,5 @@ spec:
             image: alpine
             script: |
               echo "Attempt will fail to demonstrate retries"
+              echo "This task is configured to retry up to 3 times"
               exit 1
