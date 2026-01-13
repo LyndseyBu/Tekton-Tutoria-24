@@ -1,0 +1,8 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: log-generator-run
+spec:
+  pipelineRef:
+    name: log-generator-pipeline
+  serviceAccountName: default
